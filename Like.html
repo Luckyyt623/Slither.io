@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do You Like Me?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            position: relative;
+            width: 300px;
+            height: 150px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            width: 100px; /* Fixed size for buttons */
+        }
+
+        .yes {
+            background-color: #4caf50;
+            color: white;
+            left: 50px;
+            top: 50px;
+        }
+
+        .no {
+            background-color: #f44336;
+            color: white;
+            left: 150px; /* Initial position */
+            top: 50px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Do you like me?</h1>
+    <div class="button-container">
+        <button class="btn yes">Yes</button>
+        <button class="btn no">No</button>
+    </div>
+
+    <script>
+        const noButton = document.querySelector('.no');
+
+        noButton.addEventListener('click', () => {
+            // Generate random positions within the container
+            const container = document.querySelector('.button-container');
+            const containerWidth = container.offsetWidth;
+            const containerHeight = container.offsetHeight;
+
+            const buttonWidth = noButton.offsetWidth;
+            const buttonHeight = noButton.offsetHeight;
+
+            const randomX = Math.random() * (containerWidth - buttonWidth);
+            const randomY = Math.random() * (containerHeight - buttonHeight);
+
+            noButton.style.left = `${randomX}px`;
+            noButton.style.top = `${randomY}px`;
+        });
+
+        // Add functionality for Yes button
+        const yesButton = document.querySelector('.yes');
+        yesButton.addEventListener('click', () => {
+            alert('Yay! I like you too! 😊');
+        });
+    </script>
+</body>
+</html>
