@@ -6,6 +6,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: slither_app
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -21,4 +24,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: slither-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: slither_app/build/app/outputs/flutter-apk/app-release.apk
