@@ -62,7 +62,7 @@ class _SlitherHomeState extends State<SlitherHome> {
           onPageFinished: (_) => setState(() => _isLoading = false),
         ),
       )
-      ..loadRequest(Uri.parse('http://slither.io'));
+     ..loadRequest(Uri.parse('https://slither.io'));
   }
 
   void _toggleMode() {
