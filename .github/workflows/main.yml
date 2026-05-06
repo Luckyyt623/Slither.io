@@ -6,9 +6,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: slither_app
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -19,9 +16,17 @@ jobs:
         with:
           flutter-version: '3.19.0'
           channel: 'stable'
-      - run: flutter pub get
-      - run: flutter build apk --release
+      - name: Create full Flutter project
+        run: |
+          flutter create --project-name slither_browser tmp_app
+          cp slither_app/lib/main.dart tmp_app/lib/main.dart
+          cp slither_app/pubspec.yaml tmp_app/pubspec.yaml
+      - name: Build APK
+        working-directory: tmp_app
+        run: |
+          flutter pub get
+          flutter build apk --release
       - uses: actions/upload-artifact@v4
         with:
           name: slither-apk
-          path: slither_app/build/app/outputs/flutter-apk/app-release.apk
+          path: tmp_app/build/app/outputs/flutter-apk/app-release.apk
