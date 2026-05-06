@@ -48,20 +48,16 @@ class _SlitherHomeState extends State<SlitherHome> {
         onPageStarted: (_) => setState(() => _isLoading = true),
         onPageFinished: (_) => setState(() => _isLoading = false),
         onWebResourceError: (error) {
-          Future.delayed(const Duration(seconds: 2), () => _controller.reload());
+          Future.delayed(const Duration(seconds: 2), () {
+            _controller.loadRequest(Uri.parse('https://www.slither.io'));
+          });
         },
       ));
 
     final androidController = _controller.platform as AndroidWebViewController;
     androidController.setMediaPlaybackRequiresUserGesture(false);
 
-    _controller.loadRequest(
-      Uri.parse('https://slither.io'),
-      headers: {
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
-      },
-    );
+    _controller.loadRequest(Uri.parse('https://www.slither.io'));
   }
 
   void _toggleMode() {
@@ -98,7 +94,7 @@ class _SlitherHomeState extends State<SlitherHome> {
               ]),
             ),
           ),
-          IconButton(icon: const Icon(Icons.refresh, color: Colors.white70, size: 20), onPressed: () => _controller.reload()),
+          IconButton(icon: const Icon(Icons.refresh, color: Colors.white70, size: 20), onPressed: () => _controller.loadRequest(Uri.parse('https://www.slither.io'))),
         ],
       ),
       body: Stack(children: [
