@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
@@ -65,10 +66,15 @@ class _SlitherHomeState extends State<SlitherHome> {
         },
       ));
 
-    final android = _controller.platform as AndroidWebViewController;
-    await android.setMediaPlaybackRequiresUserGesture(false);
-    await android.clearCache();
-    await android.clearLocalStorage();
+    // Only apply Android-specific settings if on Android
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final android = _controller.platform as AndroidWebViewController?;
+      if (android != null) {
+        await android.setMediaPlaybackRequiresUserGesture(false);
+        await android.clearCache();
+        await android.clearLocalStorage();
+      }
+    }
 
     await _controller.loadRequest(Uri.parse(_url));
   }
@@ -142,9 +148,13 @@ class _SlitherHomeState extends State<SlitherHome> {
           IconButton(
             icon: const Icon(Icons.refresh, color: Colors.white70, size: 20),
             onPressed: () async {
-              final android =
-                  _controller.platform as AndroidWebViewController;
-              await android.clearCache();
+              if (defaultTargetPlatform == TargetPlatform.android) {
+                final android =
+                    _controller.platform as AndroidWebViewController?;
+                if (android != null) {
+                  await android.clearCache();
+                }
+              }
               await _controller.loadRequest(Uri.parse(_url));
             },
           ),
