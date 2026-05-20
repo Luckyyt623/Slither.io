@@ -68,28 +68,23 @@ class _SlitherHomeState extends State<SlitherHome> {
         onWebResourceError: (error) async {
           debugPrint('WebView Error: ${error.errorCode} - ${error.description}');
 
-          // Retry on cache miss
-          if (error.errorCode == -1 || 
-              error.description.contains("CACHE_MISS") ||
-              error.description.contains("ERR_")) {
+          if (error.description.contains("CACHE_MISS") || 
+              error.errorCode == -1) {
             await Future.delayed(const Duration(seconds: 1));
             await _controller.loadRequest(Uri.parse(_url));
           }
         },
       ));
 
-    // Android Specific Optimizations
+    // Android Specific Optimizations (Safe for older plugin version)
     if (defaultTargetPlatform == TargetPlatform.android) {
-      final androidController = _controller.platform as AndroidWebViewController;
+      final androidController = _controller.platform as AndroidWebViewController?;
 
-      await androidController.setMediaPlaybackRequiresUserGesture(false);
-      await androidController.clearCache();
-      await androidController.clearLocalStorage();
-      
-      // Important fixes for loading issues
-      await androidController.setMixedContentMode(
-        AndroidWebViewController.MIXED_CONTENT_ALWAYS_ALLOW,
-      );
+      if (androidController != null) {
+        await androidController.setMediaPlaybackRequiresUserGesture(false);
+        await androidController.clearCache();
+        await androidController.clearLocalStorage();
+      }
     }
 
     await _controller.loadRequest(Uri.parse(_url));
@@ -103,7 +98,6 @@ class _SlitherHomeState extends State<SlitherHome> {
     _initWebView(desktop: _isDesktop);
   }
 
-  // Back Button Handler
   Future<bool> _onWillPop() async {
     if (await _controller.canGoBack()) {
       await _controller.goBack();
@@ -138,7 +132,6 @@ class _SlitherHomeState extends State<SlitherHome> {
               ),
           ]),
           actions: [
-            // Mode Toggle
             GestureDetector(
               onTap: _toggleMode,
               child: AnimatedContainer(
@@ -169,7 +162,6 @@ class _SlitherHomeState extends State<SlitherHome> {
                 ]),
               ),
             ),
-            // Refresh Button
             IconButton(
               icon: const Icon(Icons.refresh, color: Colors.white70, size: 20),
               onPressed: () async {
